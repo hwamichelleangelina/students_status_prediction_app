@@ -104,7 +104,7 @@ with st.form("student_form"):
         daytime_evening_attendance = st.radio("Daytime/evening attendance", ["Daytime", "Evening"])
         daytime_evening_attendance = 1 if daytime_evening_attendance == "Daytime" else 0
 
-        previous_qualification = st.number_input("Previous qualification:", step=1, value=0)
+        previous_qualification = st.number_input("Previous qualification:", min_value=0, step=1, value=0)
         previous_qualification_grade = st.number_input("Previous qualification grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
         admission_grade = st.number_input("Admission grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
         nationality = st.number_input("Nationality:", min_value=0, step=1, value=0)

@@ -45,6 +45,7 @@ with st.form("student_form"):
             "Daytime": 1,
             "Evening": 0
         }
+        edaytime_evening_attendance = daytime_evening_attendance_map.get(daytime_evening_attendance, 0)
         
         previous_qualification = st.number_input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1, value=0)
         previous_qualification_grade = st.number_input("Previous qualification grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)

@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 
 # Load model dan alat bantu
 xgb_model = joblib.load("xgb_model.pkl")
-rf_model = joblib.load("rf_model.pkl")
+rf_model = joblib.load("rf_model_compressed.pkl")
 scaler = joblib.load("scaler.pkl")
 label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")

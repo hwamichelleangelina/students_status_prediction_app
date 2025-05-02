@@ -4,7 +4,51 @@ import numpy as np
 import joblib
 from tensorflow.keras.models import load_model
 
-# Load model dan alat bantu
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #ffeaf4;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .custom-title {
+        color: #d63384;
+        text-align: center;
+        font-size: 40px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .custom-subheader {
+        color: #b30059;
+        font-size: 22px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    div[data-testid="stForm"] {
+        background-color: #fff0f5;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #ffb6c1;
+        box-shadow: 2px 2px 12px rgba(220, 20, 60, 0.1);
+    }
+
+    button[kind="primary"] {
+        background-color: #ff69b4;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: bold;
+        border: none;
+    }
+
+    button[kind="primary"]:hover {
+        background-color: #ff85c1;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 xgb_model = joblib.load("xgb_model.pkl")
 rf_model = joblib.load("rf_model_compressed.pkl")
 scaler = joblib.load("scaler.pkl")
@@ -13,183 +57,78 @@ label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")
 meta_model = joblib.load('meta_model.pkl')
 
-# Custom Styling
-st.markdown("""
-    <style>
-        body {
-            background-color: #f9e1e1;
-        }
+st.markdown('<div class="custom-title">🎓 Prediksi Status Mahasiswa - Jaya Jaya Institut 🎓</div>', unsafe_allow_html=True)
 
-        .css-1d391kg, .css-1d391kg h1, .css-1d391kg h2, .css-1d391kg p, .css-1d391kg li, .css-1d391kg div {
-            color: #000000;
-        }
-
-        .stButton button, .stSelectbox div, .stRadio input, .stSlider div, .stNumberInput div {
-            background-color: #f6c5c5;
-            border-radius: 10px;
-            border: none;
-            color: black;
-        }
-
-        .stButton button:hover {
-            background-color: #f9a8a8;
-        }
-
-        .stTextInput input, .stNumberInput input, .stSelectbox select, .stRadio input {
-            background-color: #ffe0e0;
-            color: black;
-        }
-
-        .stTitle {
-            font-size: 2em;
-            font-weight: 600;
-            color: #f29e9e;
-        }
-
-        .stSubheader {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #d57f7f;
-        }
-
-        .stForm {
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #ffffff;
-        }
-        
-        .stColumn {
-            padding: 10px;
-        }
-
-        .stFooter {
-            background-color: #f9e1e1;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Judul
-st.title("Prediksi Status Mahasiswa - Jaya Jaya Institut")
-
-# Input Form
 with st.form("student_form"):
-    st.subheader("Masukkan Data Mahasiswa")
+    st.markdown('<div class="custom-subheader">Masukkan Data Mahasiswa</div>', unsafe_allow_html=True)
     st.markdown("**Harap masukkan informasi yang diperlukan untuk mendapatkan prediksi status mahasiswa.**")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        marital_status = st.selectbox(
-            "Marital Status",
-            options=["Single", "Married", "Widower", "Divorced", "Facto Union", "Legally Separated"]
-        )
-        marital_status_map = {
-            "Single": 1,
-            "Married": 2,
-            "Widower": 3,
-            "Divorced": 4,
-            "Facto Union": 5,
-            "Legally Separated": 6
-        }
-        marital_status = marital_status_map.get(marital_status, 0)
+        marital_status = st.selectbox("Marital Status", ["Single", "Married", "Widower", "Divorced", "Facto Union", "Legally Separated"])
+        marital_status = {
+            "Single": 1, "Married": 2, "Widower": 3,
+            "Divorced": 4, "Facto Union": 5, "Legally Separated": 6
+        }.get(marital_status, 0)
 
-        application_mode = st.number_input("Application mode (1-1st phase, 39-Over 23 years old, 42-Transfer, etc.): ", step=1, value=0)
-        application_order = st.slider("Application order (0 - first choice, 9 - last choice): ", min_value=0, max_value=9, value=0)
-        course = st.number_input("Course (33 - Biofuel Production Technologies, 171 - Animation and Multimedia Design, etc.): ", step=1, value=0)
+        application_mode = st.number_input("Application mode:", step=1, value=0)
+        application_order = st.slider("Application order (0-9):", min_value=0, max_value=9, value=0)
+        course = st.number_input("Course:", step=1, value=0)
 
-        daytime_evening_attendance = st.radio(
-            "Daytime/evening attendance",
-            options=["Daytime", "Evening"]
-        )
-        daytime_evening_attendance_map = {
-            "Daytime": 1,
-            "Evening": 0
-        }
-        daytime_evening_attendance = daytime_evening_attendance_map.get(daytime_evening_attendance, 0)
-        
-        previous_qualification = st.number_input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1, value=0)
-        previous_qualification_grade = st.number_input("Previous qualification grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        admission_grade = st.number_input("Admission grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        nationality = st.number_input("Nationality (1-Portuguese, 2-German, etc.): ", step=1, value=0)
-        mothers_qualification = st.number_input("Mother's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1, value=0)
-        fathers_qualification = st.number_input("Father's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1, value=0)
-        mothers_occupation = st.number_input("Mother's occupation (0-Student, 1-Executive, etc.): ", step=1, value=0)
-        fathers_occupation = st.number_input("Father's occupation (0-Student, 1-Executive, etc.): ", step=1, value=0)
+        daytime_evening_attendance = st.radio("Daytime/evening attendance", ["Daytime", "Evening"])
+        daytime_evening_attendance = 1 if daytime_evening_attendance == "Daytime" else 0
+
+        previous_qualification = st.number_input("Previous qualification:", step=1, value=0)
+        previous_qualification_grade = st.number_input("Previous qualification grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
+        admission_grade = st.number_input("Admission grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
+        nationality = st.number_input("Nationality:", step=1, value=0)
+        mothers_qualification = st.number_input("Mother's qualification:", step=1, value=0)
+        fathers_qualification = st.number_input("Father's qualification:", step=1, value=0)
+        mothers_occupation = st.number_input("Mother's occupation:", step=1, value=0)
+        fathers_occupation = st.number_input("Father's occupation:", step=1, value=0)
 
     with col2:
-        displaced = st.radio(
-            "Displaced",
-            options=["Yes", "No"]
-        )
-        displaced_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        displaced = displaced_map.get(displaced, 0)
+        displaced = st.radio("Displaced", ["Yes", "No"])
+        displaced = 1 if displaced == "Yes" else 0
 
-        educational_special_needs = st.radio("Educational special needs", options=["Yes", "No"])
-        educational_special_needs_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        educational_special_needs = educational_special_needs_map.get(educational_special_needs, 0)
+        educational_special_needs = st.radio("Educational special needs", ["Yes", "No"])
+        educational_special_needs = 1 if educational_special_needs == "Yes" else 0
 
-        debtor = st.radio("Debtor", options=["Yes", "No"])
-        debtor_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        debtor = debtor_map.get(debtor, 0)
+        debtor = st.radio("Debtor", ["Yes", "No"])
+        debtor = 1 if debtor == "Yes" else 0
 
-        tuition_fees_up_to_date = st.radio("Tuition fees up to date", options=["Yes", "No"])
-        tuition_fees_up_to_date_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        tuition_fees_up_to_date = tuition_fees_up_to_date_map.get(tuition_fees_up_to_date, 0)
+        tuition_fees_up_to_date = st.radio("Tuition fees up to date", ["Yes", "No"])
+        tuition_fees_up_to_date = 1 if tuition_fees_up_to_date == "Yes" else 0
 
-        gender = st.radio(
-            "Gender",
-            options=["Male", "Female"]
-        )
-        gender_map = {
-            "Male": 1,
-            "Female": 0
-        }
-        gender = gender_map.get(gender, 0)
+        gender = st.radio("Gender", ["Male", "Female"])
+        gender = 1 if gender == "Male" else 0
 
-        scholarship_holder = st.radio("Scholarship holder", options=["Yes", "No"])
-        scholarship_holder_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        scholarship_holder = scholarship_holder_map.get(scholarship_holder, 0)
+        scholarship_holder = st.radio("Scholarship holder", ["Yes", "No"])
+        scholarship_holder = 1 if scholarship_holder == "Yes" else 0
 
-        age_at_enrollment = st.number_input("Age at enrollment: ", min_value=0, max_value=100, step=1, value=0)
-        international = st.radio("International", options=["Yes", "No"])
-        international_map = {
-            "Yes": 1,
-            "No": 0
-        }
-        international = international_map.get(international, 0)
+        age_at_enrollment = st.number_input("Age at enrollment:", min_value=0, max_value=100, step=1, value=0)
 
-        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited): ", step=1, value=0)
-        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled): ", step=1, value=0)
-        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations): ", step=1, value=0)
-        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved): ", step=1, value=0)
-        curricular_units_1st_sem_grade = st.number_input("Curricular units 1st sem (grade): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations): ", step=1, value=0)
+        international = st.radio("International", ["Yes", "No"])
+        international = 1 if international == "Yes" else 0
 
-        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited): ", step=1, value=0)
-        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled): ", step=1, value=0)
-        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations): ", step=1, value=0)
-        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved): ", step=1, value=0)
-        curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations): ", step=1, value=0)
+        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited):", step=1, value=0)
+        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled):", step=1, value=0)
+        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations):", step=1, value=0)
+        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved):", step=1, value=0)
+        curricular_units_1st_sem_grade = st.number_input("Curricular units 1st sem (grade):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
+        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations):", step=1, value=0)
 
-        unemployment_rate = st.number_input("Unemployment rate: ", min_value=0.0, step=0.1, value=0.0)
-        inflation_rate = st.number_input("Inflation rate: ", min_value=0.0, step=0.1, value=0.0)
-        gdp = st.number_input("GDP: ", min_value=-9.0, step=0.1, value=0.0)
+        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited):", step=1, value=0)
+        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled):", step=1, value=0)
+        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations):", step=1, value=0)
+        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved):", step=1, value=0)
+        curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
+        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations):", step=1, value=0)
+
+        unemployment_rate = st.number_input("Unemployment rate:", min_value=0.0, step=0.1, value=0.0)
+        inflation_rate = st.number_input("Inflation rate:", min_value=0.0, step=0.1, value=0.0)
+        gdp = st.number_input("GDP:", min_value=-9.0, step=0.1, value=0.0)
 
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 
@@ -198,7 +137,6 @@ def safe_divide(numerator, denominator):
     denominator = pd.Series(denominator).replace(0, np.nan)
     return (numerator / denominator).fillna(0)
 
-# Proses Prediksi
 if submitted:
     data = {
         'Marital_status': marital_status,
@@ -240,8 +178,6 @@ if submitted:
     }
 
     df = pd.DataFrame([data])
-
-    # Feature Engineering
     df['pass_rate_1st'] = safe_divide(df['Curricular_units_1st_sem_approved'], df['Curricular_units_1st_sem_enrolled'])
     df['pass_rate_2nd'] = safe_divide(df['Curricular_units_2nd_sem_approved'], df['Curricular_units_2nd_sem_enrolled'])
     df['pass_rate_total'] = safe_divide(
@@ -264,27 +200,19 @@ if submitted:
     df['financial_risk'] = (1 - df['Tuition_fees_up_to_date']) + df['Debtor'] + df['Scholarship_holder']
     df['special_case'] = df['Displaced'] + df['Educational_special_needs'] + df['International']
 
-    # Hilangkan NaN
     df.fillna(0, inplace=True)
-
-    # Drop fitur yang tidak dipakai
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
     df = df.drop(drop_cols, axis=1, errors='ignore')
     df = df.reindex(columns=scaler_columns, fill_value=0)
     X_scaled = scaler.transform(df)
-    
-    # Prediksi
+
+    # Prediction
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
     proba_dl = dl_model.predict(X_scaled)
-
-    # Ensemble
     X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
     final_proba = meta_model.predict_proba(X_meta)
     final_pred = np.argmax(final_proba, axis=1)
-
-    # Mapping
     predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
 
-    # Hasil
-    st.success(f"Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    st.success(f"🎉 Prediksi Status Mahasiswa: **{predicted_label[0]}**")

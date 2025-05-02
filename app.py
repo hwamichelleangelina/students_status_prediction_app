@@ -68,7 +68,7 @@ with st.form("student_form"):
     st.markdown('<div class="custom-subheader">Masukkan Data Mahasiswa</div>', unsafe_allow_html=True)
     st.markdown("**Harap masukkan informasi yang diperlukan untuk mendapatkan prediksi status mahasiswa.**")
 
-    col1, col2 = st.columns(2)
+    col1, col2,col3 = st.columns(3)
 
     with col1:
         marital_status = st.selectbox("Marital Status", ["Single", "Married", "Widower", "Divorced", "Facto Union", "Legally Separated"])
@@ -76,6 +76,11 @@ with st.form("student_form"):
             "Single": 1, "Married": 2, "Widower": 3,
             "Divorced": 4, "Facto Union": 5, "Legally Separated": 6
         }.get(marital_status, 0)
+
+        gender = st.radio("Gender", ["Male", "Female"])
+        gender = 1 if gender == "Male" else 0
+
+        age_at_enrollment = st.number_input("Age at enrollment:", min_value=0, max_value=100, step=1, value=0)
 
         application_mode = st.number_input("Application mode:", step=1, value=0)
         application_order = st.slider("Application order (0-9):", min_value=0, max_value=9, value=0)
@@ -93,30 +98,26 @@ with st.form("student_form"):
         mothers_occupation = st.number_input("Mother's occupation:", step=1, value=0)
         fathers_occupation = st.number_input("Father's occupation:", step=1, value=0)
 
+    with col2:
+        international = st.radio("International", ["Yes", "No"])
+        international = 1 if international == "Yes" else 0
+
         displaced = st.radio("Displaced", ["Yes", "No"])
         displaced = 1 if displaced == "Yes" else 0
 
         educational_special_needs = st.radio("Educational special needs", ["Yes", "No"])
         educational_special_needs = 1 if educational_special_needs == "Yes" else 0
 
-        debtor = st.radio("Debtor", ["Yes", "No"])
-        debtor = 1 if debtor == "Yes" else 0
-
         tuition_fees_up_to_date = st.radio("Tuition fees up to date", ["Yes", "No"])
         tuition_fees_up_to_date = 1 if tuition_fees_up_to_date == "Yes" else 0
 
-        gender = st.radio("Gender", ["Male", "Female"])
-        gender = 1 if gender == "Male" else 0
+        debtor = st.radio("Debtor", ["Yes", "No"])
+        debtor = 1 if debtor == "Yes" else 0
 
         scholarship_holder = st.radio("Scholarship holder", ["Yes", "No"])
         scholarship_holder = 1 if scholarship_holder == "Yes" else 0
-
-        age_at_enrollment = st.number_input("Age at enrollment:", min_value=0, max_value=100, step=1, value=0)
-
-    with col2:
-        international = st.radio("International", ["Yes", "No"])
-        international = 1 if international == "Yes" else 0
-
+    
+    with col3:
         curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited):", step=1, value=0)
         curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled):", step=1, value=0)
         curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations):", step=1, value=0)

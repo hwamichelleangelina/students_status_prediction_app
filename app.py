@@ -13,12 +13,37 @@ label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")
 meta_model = joblib.load('meta_model.pkl')
 
+# Custom Styling
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f0f2f6;
+        padding: 20px;
+    }
+    h1 {
+        color: #4CAF50;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+    }
+    .stRadio>div {
+        font-size: 16px;
+    }
+    .stNumberInput>label {
+        font-size: 16px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Judul
 st.title("Prediksi Status Mahasiswa - Jaya Jaya Institut")
 
 # Input Form
 with st.form("student_form"):
     st.subheader("Masukkan Data Mahasiswa")
+    st.markdown("**Harap masukkan informasi yang diperlukan untuk mendapatkan prediksi status mahasiswa.**")
 
     col1, col2 = st.columns(2)
 
@@ -214,25 +239,21 @@ if submitted:
     # Drop fitur yang tidak dipakai
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
     df = df.drop(drop_cols, axis=1, errors='ignore')
-
-    # Pastikan kolom df sesuai dengan scaler_columns
     df = df.reindex(columns=scaler_columns, fill_value=0)
-
-    # Melakukan transformasi dengan scaler yang sudah dilatih
     X_scaled = scaler.transform(df)
     
-    # Proses prediksi dengan model yang sudah dilatih
+    # Prediksi
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
     proba_dl = dl_model.predict(X_scaled)
 
-    # Ensemble prediksi
+    # Ensemble
     X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
     final_proba = meta_model.predict_proba(X_meta)
     final_pred = np.argmax(final_proba, axis=1)
 
-    # Mapping label ke status mahasiswa
+    # Mapping
     predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
 
-    # Menampilkan hasil prediksi
-    st.write(f"Prediksi Status Mahasiswa: {predicted_label[0]}")
+    # Hasil
+    st.success(f"Prediksi Status Mahasiswa: **{predicted_label[0]}**")

@@ -39,13 +39,16 @@ with st.form("student_form"):
         application_mode = st.number_input("Application mode (1-1st phase, 39-Over 23 years old, 42-Transfer, etc.): ", step=1, value=0)
         application_order = st.slider("Application order (0 - first choice, 9 - last choice): ", min_value=0, max_value=9, value=0)
         course = st.number_input("Course (33 - Biofuel Production Technologies, 171 - Animation and Multimedia Design, etc.): ", step=1, value=0)
-        
-        daytime_evening_attendance = st.radio("Daytime/evening attendance", options=["Daytime", "Evening"])
+
+        daytime_evening_attendance = st.radio(
+            "Daytime/evening attendance",
+            options=["Daytime", "Evening"]
+        )
         daytime_evening_attendance_map = {
             "Daytime": 1,
             "Evening": 0
         }
-        edaytime_evening_attendance = daytime_evening_attendance_map.get(daytime_evening_attendance, 0)
+        daytime_evening_attendance = daytime_evening_attendance_map.get(daytime_evening_attendance, 0)
         
         previous_qualification = st.number_input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1, value=0)
         previous_qualification_grade = st.number_input("Previous qualification grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1, value=0.0)

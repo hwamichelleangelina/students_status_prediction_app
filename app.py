@@ -97,9 +97,9 @@ with st.form("student_form"):
 
         age_at_enrollment = st.number_input("Age at enrollment:", min_value=0, max_value=100, step=1, value=0)
 
-        application_mode = st.number_input("Application mode:", step=1, value=0)
+        application_mode = st.number_input("Application mode:", min_value=0, step=1, value=0)
         application_order = st.slider("Application order (0-9):", min_value=0, max_value=9, value=0)
-        course = st.number_input("Course:", step=1, value=0)
+        course = st.number_input("Course:", min_value=0, step=1, value=0)
 
         daytime_evening_attendance = st.radio("Daytime/evening attendance", ["Daytime", "Evening"])
         daytime_evening_attendance = 1 if daytime_evening_attendance == "Daytime" else 0
@@ -107,11 +107,11 @@ with st.form("student_form"):
         previous_qualification = st.number_input("Previous qualification:", step=1, value=0)
         previous_qualification_grade = st.number_input("Previous qualification grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
         admission_grade = st.number_input("Admission grade (0-200):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        nationality = st.number_input("Nationality:", step=1, value=0)
-        mothers_qualification = st.number_input("Mother's qualification:", step=1, value=0)
-        fathers_qualification = st.number_input("Father's qualification:", step=1, value=0)
-        mothers_occupation = st.number_input("Mother's occupation:", step=1, value=0)
-        fathers_occupation = st.number_input("Father's occupation:", step=1, value=0)
+        nationality = st.number_input("Nationality:", min_value=0, step=1, value=0)
+        mothers_qualification = st.number_input("Mother's qualification:", min_value=0, step=1, value=0)
+        fathers_qualification = st.number_input("Father's qualification:", min_value=0, step=1, value=0)
+        mothers_occupation = st.number_input("Mother's occupation:", min_value=0, step=1, value=0)
+        fathers_occupation = st.number_input("Father's occupation:", min_value=0, step=1, value=0)
 
     with col2:
         st.markdown("Data Finansial")
@@ -139,19 +139,19 @@ with st.form("student_form"):
     
     with col3:
         st.markdown("Data Akademik")
-        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited):", step=1, value=0)
-        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled):", step=1, value=0)
-        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations):", step=1, value=0)
-        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved):", step=1, value=0)
+        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited):", min_value=0, step=1, value=0)
+        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled):", min_value=0, step=1, value=0)
+        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations):", min_value=0, step=1, value=0)
+        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved):", min_value=0, step=1, value=0)
         curricular_units_1st_sem_grade = st.number_input("Curricular units 1st sem (grade):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations):", step=1, value=0)
+        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations):", min_value=0, step=1, value=0)
 
-        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited):", step=1, value=0)
-        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled):", step=1, value=0)
-        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations):", step=1, value=0)
-        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved):", step=1, value=0)
+        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited):", min_value=0, step=1, value=0)
+        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled):", min_value=0, step=1, value=0)
+        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations):", min_value=0, step=1, value=0)
+        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved):", min_value=0, step=1, value=0)
         curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
-        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations):", step=1, value=0)
+        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations):", min_value=0, step=1, value=0)
 
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 

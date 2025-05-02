@@ -97,7 +97,7 @@ with st.form("student_form"):
         }
         scholarship_holder = scholarship_holder_map.get(scholarship_holder, 0)
 
-        age_at_enrollment = st.number_input("Age at enrollment: ", min_value=10, max_value=100, step=1, value=0)
+        age_at_enrollment = st.number_input("Age at enrollment: ", min_value=0, max_value=100, step=1, value=0)
         international = st.radio("International", options=["Yes", "No"])
         international_map = {
             "Yes": 1,

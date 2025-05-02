@@ -57,7 +57,12 @@ label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")
 meta_model = joblib.load('meta_model.pkl')
 
-st.markdown('<div class="custom-title">🎓 Prediksi Status Mahasiswa - Jaya Jaya Institut 🎓</div>', unsafe_allow_html=True)
+st.markdown('''
+    <div class="custom-title">
+        Prediksi Status Mahasiswa<br>
+        🎓 Jaya Jaya Institut 🎓
+    </div>
+''', unsafe_allow_html=True)
 
 with st.form("student_form"):
     st.markdown('<div class="custom-subheader">Masukkan Data Mahasiswa</div>', unsafe_allow_html=True)
@@ -215,4 +220,7 @@ if submitted:
     final_pred = np.argmax(final_proba, axis=1)
     predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
 
-    st.success(f"🎉 Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    if predicted_label[0].lower() == "dropout":
+        st.error(f"⚠️ Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    else:
+        st.success(f"🎉 Prediksi Status Mahasiswa: **{predicted_label[0]}**")

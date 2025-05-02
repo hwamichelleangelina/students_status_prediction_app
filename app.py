@@ -46,6 +46,20 @@ st.markdown("""
     button[kind="primary"]:hover {
         background-color: #ff85c1;
     }
+
+    .stForm {
+        max-width: 95%;
+        margin: auto;
+    }
+
+    .element-container:has(.stForm) {
+        max-width: 90vw;
+    }
+    
+    .block-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
     </style>
 """, unsafe_allow_html=True)
 

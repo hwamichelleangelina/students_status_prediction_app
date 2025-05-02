@@ -16,24 +16,55 @@ meta_model = joblib.load('meta_model.pkl')
 # Custom Styling
 st.markdown("""
     <style>
-    .main {
-        background-color: #f0f2f6;
-        padding: 20px;
-    }
-    h1 {
-        color: #4CAF50;
-    }
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-weight: bold;
-    }
-    .stRadio>div {
-        font-size: 16px;
-    }
-    .stNumberInput>label {
-        font-size: 16px;
-    }
+        body {
+            background-color: #f9e1e1;
+        }
+
+        .css-1d391kg, .css-1d391kg h1, .css-1d391kg h2, .css-1d391kg p, .css-1d391kg li, .css-1d391kg div {
+            color: #000000;
+        }
+
+        .stButton button, .stSelectbox div, .stRadio input, .stSlider div, .stNumberInput div {
+            background-color: #f6c5c5;
+            border-radius: 10px;
+            border: none;
+            color: black;
+        }
+
+        .stButton button:hover {
+            background-color: #f9a8a8;
+        }
+
+        .stTextInput input, .stNumberInput input, .stSelectbox select, .stRadio input {
+            background-color: #ffe0e0;
+            color: black;
+        }
+
+        .stTitle {
+            font-size: 2em;
+            font-weight: 600;
+            color: #f29e9e;
+        }
+
+        .stSubheader {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #d57f7f;
+        }
+
+        .stForm {
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        
+        .stColumn {
+            padding: 10px;
+        }
+
+        .stFooter {
+            background-color: #f9e1e1;
+        }
     </style>
 """, unsafe_allow_html=True)
 

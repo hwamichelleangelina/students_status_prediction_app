@@ -21,50 +21,49 @@ with st.form("student_form"):
     col1, col2 = st.columns(2)
 
     with col1:
-        
-        marital_status = int(input("Marital status (1: single, 2: married, 3: widower, 4: divorced, 5: facto union, 6: legally separated): "))
-        application_mode = int(input("Application mode (1-1st phase, 39-Over 23 years old, 42-Transfer, etc.): "))
-        application_order = int(input("Application order (0 - first choice, 9 - last choice): "))
-        course = int(input("Course (33 - Biofuel Production Technologies, 171 - Animation and Multimedia Design, etc.): "))
-        daytime_evening_attendance = int(input("Daytime/evening attendance (1 – daytime, 0 – evening): "))
-        previous_qualification = int(input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): "))
-        
-        previous_qualification_grade = float(input("Previous qualification grade (0 to 200): "))
-        admission_grade = float(input("Admission grade (0 to 200): "))
-        
-        nationality = int(input("Nationality (1-Portuguese, 2-German, etc.): "))
-        mothers_qualification = int(input("Mother's qualification (1-Secondary education, 2-Bachelor's degree, etc.): "))
-        fathers_qualification = int(input("Father's qualification (1-Secondary education, 2-Bachelor's degree, etc.): "))
-        mothers_occupation = int(input("Mother's occupation (0-Student, 1-Executive, etc.): "))
-        fathers_occupation = int(input("Father's occupation (0-Student, 1-Executive, etc.): "))
-
+        marital_status = st.number_input("Marital status (1: single, 2: married, 3: widower, 4: divorced, 5: facto union, 6: legally separated): ", min_value=1, max_value=6, step=1)
+        application_mode = st.number_input("Application mode (1-1st phase, 39-Over 23 years old, 42-Transfer, etc.): ", step=1)
+        application_order = st.slider("Application order (0 - first choice, 9 - last choice): ", min_value=0, max_value=9)
+        course = st.number_input("Course (33 - Biofuel Production Technologies, 171 - Animation and Multimedia Design, etc.): ", step=1)
+        daytime_evening_attendance = st.radio("Daytime/evening attendance (1 – daytime, 0 – evening): ", [1, 0])
+        previous_qualification = st.number_input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
+    
+        previous_qualification_grade = st.number_input("Previous qualification grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1)
+        admission_grade = st.number_input("Admission grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1)
+    
+        nationality = st.number_input("Nationality (1-Portuguese, 2-German, etc.): ", step=1)
+        mothers_qualification = st.number_input("Mother's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
+        fathers_qualification = st.number_input("Father's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
+        mothers_occupation = st.number_input("Mother's occupation (0-Student, 1-Executive, etc.): ", step=1)
+        fathers_occupation = st.number_input("Father's occupation (0-Student, 1-Executive, etc.): ", step=1)
+    
     with col2:
-        displaced = int(input("Displaced (1-yes, 0-no): "))
-        educational_special_needs = int(input("Educational special needs (1-yes, 0-no): "))
-        debtor = int(input("Debtor (1-yes, 0-no): "))
-        tuition_fees_up_to_date = int(input("Tuition fees up to date (1-yes, 0-no): "))
-        gender = int(input("Gender (1-male, 0-female): "))
-        scholarship_holder = int(input("Scholarship holder (1-yes, 0-no): "))
-        age_at_enrollment = int(input("Age at enrollment: "))
-        international = int(input("International (1-yes, 0-no): "))
+        displaced = st.radio("Displaced (1-yes, 0-no): ", [1, 0])
+        educational_special_needs = st.radio("Educational special needs (1-yes, 0-no): ", [1, 0])
+        debtor = st.radio("Debtor (1-yes, 0-no): ", [1, 0])
+        tuition_fees_up_to_date = st.radio("Tuition fees up to date (1-yes, 0-no): ", [1, 0])
+        gender = st.radio("Gender (1-male, 0-female): ", [1, 0])
+        scholarship_holder = st.radio("Scholarship holder (1-yes, 0-no): ", [1, 0])
+        age_at_enrollment = st.number_input("Age at enrollment: ", min_value=10, max_value=100, step=1)
+        international = st.radio("International (1-yes, 0-no): ", [1, 0])
     
-        curricular_units_1st_sem_credited = int(input("Curricular units 1st sem (credited): "))
-        curricular_units_1st_sem_enrolled = int(input("Curricular units 1st sem (enrolled): "))
-        curricular_units_1st_sem_evaluations = int(input("Curricular units 1st sem (evaluations): "))
-        curricular_units_1st_sem_approved = int(input("Curricular units 1st sem (approved): "))
-        curricular_units_1st_sem_grade = float(input("Curricular units 1st sem (grade): "))
-        curricular_units_1st_sem_without_evaluations = int(input("Curricular units 1st sem (without evaluations): "))
+        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited): ", step=1)
+        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled): ", step=1)
+        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations): ", step=1)
+        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved): ", step=1)
+        curricular_units_1st_sem_grade = st.number_input("Curricular units 1st sem (grade): ", min_value=0.0, max_value=200.0, step=0.1)
+        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations): ", step=1)
     
-        curricular_units_2nd_sem_credited = int(input("Curricular units 2nd sem (credited): "))
-        curricular_units_2nd_sem_enrolled = int(input("Curricular units 2nd sem (enrolled): "))
-        curricular_units_2nd_sem_evaluations = int(input("Curricular units 2nd sem (evaluations): "))
-        curricular_units_2nd_sem_approved = int(input("Curricular units 2nd sem (approved): "))
-        curricular_units_2nd_sem_grade = float(input("Curricular units 2nd sem (grade): "))
-        curricular_units_2nd_sem_without_evaluations = int(input("Curricular units 2nd sem (without evaluations): "))
+        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited): ", step=1)
+        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled): ", step=1)
+        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations): ", step=1)
+        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved): ", step=1)
+        curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade): ", min_value=0.0, max_value=200.0, step=0.1)
+        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations): ", step=1)
     
-        unemployment_rate = float(input("Unemployment rate: "))
-        inflation_rate = float(input("Inflation rate: "))
-        gdp = float(input("GDP: "))
+        unemployment_rate = st.number_input("Unemployment rate: ", min_value=0.0, step=0.1)
+        inflation_rate = st.number_input("Inflation rate: ", min_value=0.0, step=0.1)
+        gdp = st.number_input("GDP: ", min_value=0.0, step=0.1)
 
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 
@@ -149,4 +148,4 @@ if submitted:
     label_encoder_status = label_encoders['Status']
     predicted_label = label_encoder_status.inverse_transform(final_pred.astype(int))
 
-    st.success(f"🎯 Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    st.success(f"Prediksi Status Mahasiswa: **{predicted_label[0]}**")

@@ -121,7 +121,7 @@ with st.form("student_form"):
 
         unemployment_rate = st.number_input("Unemployment rate: ", min_value=0.0, step=0.1)
         inflation_rate = st.number_input("Inflation rate: ", min_value=0.0, step=0.1)
-        gdp = st.number_input("GDP: ", min_value=0.0, step=0.1)
+        gdp = st.number_input("GDP: ", min_value=-100.0, step=0.1)
 
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 

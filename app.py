@@ -190,12 +190,12 @@ if submitted:
     df['financial_risk'] = (1 - tuition_fees_up_to_date) + debtor + scholarship_holder
     df['special_case'] = displaced + educational_special_needs + international
 
-    # Drop kolom-kolom tidak digunakan (optional)
-    drop_cols = ['pass_rate_total']
-    df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True)
-
+    # Drop kolom-kolom tidak digunakan
+    df.fillna(0, inplace=True)
+    X_input = df.drop(['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd'], axis=1, errors='ignore')
+    
     # Scaling
-    X_scaled = scaler.transform(df)
+    X_scaled = scaler.transform(X_input)
 
     # Predict dari 3 model
     proba_rf = rf_model.predict_proba(X_scaled)

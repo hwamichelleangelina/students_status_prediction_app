@@ -126,12 +126,15 @@ with st.form("student_form"):
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 
 def safe_divide(numerator, denominator):
-    numerator = np.asarray(numerator, dtype=float)
-    denominator = np.asarray(denominator, dtype=float)
-    result = np.zeros_like(numerator, dtype=float)
-    valid = denominator != 0
-    result[valid] = numerator[valid] / denominator[valid]
-    return result
+    numerator = pd.Series(numerator)
+    denominator = pd.Series(denominator).replace(0, np.nan)
+    return (numerator / denominator).fillna(0)
+
+# Fungsi pembagian aman (hindari 0/0)
+def safe_divide(numerator, denominator):
+    numerator = pd.Series(numerator)
+    denominator = pd.Series(denominator).replace(0, np.nan)
+    return (numerator / denominator).fillna(0)
 
 # Proses Prediksi
 if submitted:
@@ -178,31 +181,49 @@ if submitted:
 
     # Feature engineering
     df['pass_rate_total'] = safe_divide(
-        curricular_units_1st_sem_approved + curricular_units_2nd_sem_approved,
-        curricular_units_1st_sem_enrolled + curricular_units_2nd_sem_enrolled
+        df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved'],
+        df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
     )
-    df['avg_grade'] = (curricular_units_1st_sem_grade + curricular_units_2nd_sem_grade) / 2
-    df['grade_gap'] = admission_grade - df['avg_grade']
-    df['total_enrolled'] = curricular_units_1st_sem_enrolled + curricular_units_2nd_sem_enrolled
-    df['total_approved'] = curricular_units_1st_sem_approved + curricular_units_2nd_sem_approved
+    df['avg_grade'] = (df['Curricular_units_1st_sem_grade'] + df['Curricular_units_2nd_sem_grade']) / 2
+    df['grade_gap'] = df['Admission_grade'] - df['avg_grade']
+    df['total_enrolled'] = df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
+    df['total_approved'] = df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved']
     df['total_failed'] = df['total_enrolled'] - df['total_approved']
-    df['unit_completion_ratio'] = safe_divide(df['total_approved'].values, df['total_enrolled'].values)
-    df['financial_risk'] = (1 - tuition_fees_up_to_date) + debtor + scholarship_holder
-    df['special_case'] = displaced + educational_special_needs + international
+    df['unit_completion_ratio'] = safe_divide(df['total_approved'], df['total_enrolled'])
+    df['financial_risk'] = (1 - df['Tuition_fees_up_to_date']) + df['Debtor'] + df['Scholarship_holder']
+    df['special_case'] = df['Displaced'] + df['Educational_special_needs'] + df['International']
 
-    # Drop kolom-kolom tidak digunakan
+    # Drop kolom yang tidak digunakan
     df.fillna(0, inplace=True)
     X_input = df.drop(['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd'], axis=1, errors='ignore')
-    
-    # Scaling
-    X_scaled = scaler.transform(X_input)
 
-    # Predict dari 3 model
+    # Reindex sesuai fitur yang digunakan saat training
+    try:
+        scaler, expected_columns = joblib.load("scaler.pkl")  # pastikan scaler disimpan bersama expected_columns
+    except:
+        st.error("Gagal memuat scaler dan daftar fitur.")
+        st.stop()
+
+    X_input = X_input.reindex(columns=expected_columns, fill_value=0.0)
+
+    # Scaling
+    try:
+        X_scaled = scaler.transform(X_input)
+    except Exception as e:
+        st.error(f"Gagal scaling data: {e}")
+        st.stop()
+
+    # Prediction dari tiga model
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
-    proba_dl = dl_model.predict(X_scaled)
+    proba_dl = dl_model.predict(X_scaled, verbose=0)
 
-    # Voting ensemble (ambil rata-rata probabilitas)
+    # Validasi dimensi output
+    if not (proba_rf.shape == proba_xgb.shape == proba_dl.shape):
+        st.error("Jumlah kelas prediksi tidak konsisten antara model!")
+        st.stop()
+
+    # Ensemble prediction
     final_proba = (proba_rf + proba_xgb + proba_dl) / 3
     final_pred = np.argmax(final_proba, axis=1)
 

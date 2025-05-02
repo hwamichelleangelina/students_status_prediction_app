@@ -215,10 +215,6 @@ if submitted:
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
     df = df.drop(drop_cols, axis=1, errors='ignore')
 
-    # Debugging checks
-    st.write("Cek tipe data df:", df.dtypes)
-    st.write("Cek apakah ada NaN:", df.isna().sum())
-
     # Pastikan kolom df sesuai dengan scaler_columns
     df = df.reindex(columns=scaler_columns, fill_value=0)
     st.write(f"Kolom df yang diproses: {df.columns}")

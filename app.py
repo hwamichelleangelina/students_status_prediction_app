@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 xgb_model = joblib.load("xgb_model.pkl")
 rf_model = joblib.load("rf_model_compressed.pkl")
 scaler = joblib.load("scaler.pkl")
+scaler_columns = joblib.load("scaler_columns.pkl")
 label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")
 
@@ -208,21 +209,23 @@ if submitted:
     # Drop fitur yang tidak dipakai
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
     X_input = df.drop(drop_cols, axis=1, errors='ignore')
+    X_input = X_input.reindex(columns=scaler_columns, fill_value=0)
 
     # Scaling
     X_scaled = scaler.transform(X_input)
 
-    # Prediksi dari masing-masing model
+    # Proses prediksi
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
     proba_dl = dl_model.predict(X_scaled)
-
+    
     # Ensemble
     X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
     final_proba = meta_model.predict_proba(X_meta)
     final_pred = np.argmax(final_proba, axis=1)
-
+    
+    # Mapping
     predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
-
+    
     # Hasil
-    st.success(f"Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    st.write(f"Prediksi Status Mahasiswa: {predicted_label[0]}")

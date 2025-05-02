@@ -11,6 +11,7 @@ scaler = joblib.load("scaler.pkl")
 scaler_columns = joblib.load("scaler_columns.pkl")
 label_encoders = joblib.load("label_encoders.pkl")
 dl_model = load_model("dl_model.h5")
+meta_model = joblib.load('meta_model.pkl')
 
 # Judul
 st.title("Prediksi Status Mahasiswa - Jaya Jaya Institut")

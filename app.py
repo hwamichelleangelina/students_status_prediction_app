@@ -210,13 +210,18 @@ if submitted:
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
     df = df.drop(drop_cols, axis=1, errors='ignore')
 
-    # Pastikan urutan kolom sesuai dengan scaler_columns
+    # Debugging checks
+    st.write("Cek tipe data df:", df.dtypes)
+    st.write("Cek apakah ada NaN:", df.isna().sum())
+
+    # Pastikan kolom df sesuai dengan scaler_columns
     df = df.reindex(columns=scaler_columns, fill_value=0)
+    st.write(f"Kolom df yang diproses: {df.columns}")
 
-    # Skala data menggunakan scaler
+    # Melakukan transformasi dengan scaler yang sudah dilatih
     X_scaled = scaler.transform(df)
-
-    # Proses prediksi
+    
+    # Proses prediksi dengan model yang sudah dilatih
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
     proba_dl = dl_model.predict(X_scaled)

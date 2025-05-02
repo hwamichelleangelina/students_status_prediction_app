@@ -208,24 +208,26 @@ if submitted:
 
     # Drop fitur yang tidak dipakai
     drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
-    X_input = df.drop(drop_cols, axis=1, errors='ignore')
-    X_input = X_input.reindex(columns=scaler_columns, fill_value=0)
+    df = df.drop(drop_cols, axis=1, errors='ignore')
 
-    # Scaling
-    X_scaled = scaler.transform(X_input)
+    # Pastikan urutan kolom sesuai dengan scaler_columns
+    df = df.reindex(columns=scaler_columns, fill_value=0)
+
+    # Skala data menggunakan scaler
+    X_scaled = scaler.transform(df)
 
     # Proses prediksi
     proba_rf = rf_model.predict_proba(X_scaled)
     proba_xgb = xgb_model.predict_proba(X_scaled)
     proba_dl = dl_model.predict(X_scaled)
-    
-    # Ensemble
+
+    # Ensemble prediksi
     X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
     final_proba = meta_model.predict_proba(X_meta)
     final_pred = np.argmax(final_proba, axis=1)
-    
-    # Mapping
+
+    # Mapping label ke status mahasiswa
     predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
-    
-    # Hasil
+
+    # Menampilkan hasil prediksi
     st.write(f"Prediksi Status Mahasiswa: {predicted_label[0]}")

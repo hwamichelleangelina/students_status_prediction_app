@@ -126,7 +126,12 @@ with st.form("student_form"):
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 
 def safe_divide(numerator, denominator):
-    return np.where(denominator != 0, numerator / denominator, 0)
+    numerator = np.asarray(numerator, dtype=float)
+    denominator = np.asarray(denominator, dtype=float)
+    result = np.zeros_like(numerator, dtype=float)
+    valid = denominator != 0
+    result[valid] = numerator[valid] / denominator[valid]
+    return result
 
 # Proses Prediksi
 if submitted:

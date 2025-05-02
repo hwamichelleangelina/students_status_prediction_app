@@ -21,46 +21,104 @@ with st.form("student_form"):
     col1, col2 = st.columns(2)
 
     with col1:
-        marital_status = st.number_input("Marital status (1: single, 2: married, 3: widower, 4: divorced, 5: facto union, 6: legally separated): ", min_value=1, max_value=6, step=1)
+        marital_status = st.selectbox(
+            "Marital Status",
+            options=["Single", "Married", "Widower", "Divorced", "Facto Union", "Legally Separated"]
+        )
+        marital_status_map = {
+            "Single": 1,
+            "Married": 2,
+            "Widower": 3,
+            "Divorced": 4,
+            "Facto Union": 5,
+            "Legally Separated": 6
+        }
+        marital_status = marital_status_map[marital_status]
+
         application_mode = st.number_input("Application mode (1-1st phase, 39-Over 23 years old, 42-Transfer, etc.): ", step=1)
         application_order = st.slider("Application order (0 - first choice, 9 - last choice): ", min_value=0, max_value=9)
         course = st.number_input("Course (33 - Biofuel Production Technologies, 171 - Animation and Multimedia Design, etc.): ", step=1)
         daytime_evening_attendance = st.radio("Daytime/evening attendance (1 – daytime, 0 – evening): ", [1, 0])
         previous_qualification = st.number_input("Previous qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
-    
         previous_qualification_grade = st.number_input("Previous qualification grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1)
         admission_grade = st.number_input("Admission grade (0 to 200): ", min_value=0.0, max_value=200.0, step=0.1)
-    
         nationality = st.number_input("Nationality (1-Portuguese, 2-German, etc.): ", step=1)
         mothers_qualification = st.number_input("Mother's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
         fathers_qualification = st.number_input("Father's qualification (1-Secondary education, 2-Bachelor's degree, etc.): ", step=1)
         mothers_occupation = st.number_input("Mother's occupation (0-Student, 1-Executive, etc.): ", step=1)
         fathers_occupation = st.number_input("Father's occupation (0-Student, 1-Executive, etc.): ", step=1)
-    
+
     with col2:
-        displaced = st.radio("Displaced (1-yes, 0-no): ", [1, 0])
-        educational_special_needs = st.radio("Educational special needs (1-yes, 0-no): ", [1, 0])
-        debtor = st.radio("Debtor (1-yes, 0-no): ", [1, 0])
-        tuition_fees_up_to_date = st.radio("Tuition fees up to date (1-yes, 0-no): ", [1, 0])
-        gender = st.radio("Gender (1-male, 0-female): ", [1, 0])
-        scholarship_holder = st.radio("Scholarship holder (1-yes, 0-no): ", [1, 0])
+        displaced = st.radio(
+            "Displaced",
+            options=["Yes", "No"]
+        )
+        displaced_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        displaced = displaced_map[displaced]
+
+        educational_special_needs = st.radio("Educational special needs", options=["Yes", "No"])
+        educational_special_needs_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        educational_special_needs = educational_special_needs_map[educational_special_needs]
+
+        debtor = st.radio("Debtor", options=["Yes", "No"])
+        debtor_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        debtor = debtor_map[debtor]
+
+        tuition_fees_up_to_date = st.radio("Tuition fees up to date", options=["Yes", "No"])
+        tuition_fees_up_to_date_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        tuition_fees_up_to_date = tuition_fees_up_to_date_map[tuition_fees_up_to_date]
+
+        gender = st.radio(
+            "Gender",
+            options=["Male", "Female"]
+        )
+        gender_map = {
+            "Male": 1,
+            "Female": 0
+        }
+        gender = gender_map[gender]
+
+        scholarship_holder = st.radio("Scholarship holder", options=["Yes", "No"])
+        scholarship_holder_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        scholarship_holder = scholarship_holder_map[scholarship_holder]
+
         age_at_enrollment = st.number_input("Age at enrollment: ", min_value=10, max_value=100, step=1)
-        international = st.radio("International (1-yes, 0-no): ", [1, 0])
-    
-        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited): ", step=1)
-        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled): ", step=1)
-        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations): ", step=1)
-        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st sem (approved): ", step=1)
-        curricular_units_1st_sem_grade = st.number_input("Curricular units 1st sem (grade): ", min_value=0.0, max_value=200.0, step=0.1)
-        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st sem (without evaluations): ", step=1)
-    
-        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd sem (credited): ", step=1)
-        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd sem (enrolled): ", step=1)
-        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd sem (evaluations): ", step=1)
-        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved): ", step=1)
-        curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade): ", min_value=0.0, max_value=200.0, step=0.1)
-        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations): ", step=1)
-    
+        international = st.radio("International", options=["Yes", "No"])
+        international_map = {
+            "Yes": 1,
+            "No": 0
+        }
+        international = international_map[international]
+
+        curricular_units_1st_sem_credited = st.number_input("Curricular units 1st semester (credited): ", step=1)
+        curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st semester (enrolled): ", step=1)
+        curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st semester (evaluations): ", step=1)
+        curricular_units_1st_sem_approved = st.number_input("Curricular units 1st semester (approved): ", step=1)
+        curricular_units_1st_sem_grade = st.number_input("Curricular units 1st semester (grade): ", min_value=0.0, max_value=200.0, step=0.1)
+        curricular_units_1st_sem_without_evaluations = st.number_input("Curricular units 1st semester (without evaluations): ", step=1)
+
+        curricular_units_2nd_sem_credited = st.number_input("Curricular units 2nd semester (credited): ", step=1)
+        curricular_units_2nd_sem_enrolled = st.number_input("Curricular units 2nd semester (enrolled): ", step=1)
+        curricular_units_2nd_sem_evaluations = st.number_input("Curricular units 2nd semester (evaluations): ", step=1)
+        curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd semester (approved): ", step=1)
+        curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd semester (grade): ", min_value=0.0, max_value=200.0, step=0.1)
+        curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd semester (without evaluations): ", step=1)
+
         unemployment_rate = st.number_input("Unemployment rate: ", min_value=0.0, step=0.1)
         inflation_rate = st.number_input("Inflation rate: ", min_value=0.0, step=0.1)
         gdp = st.number_input("GDP: ", min_value=0.0, step=0.1)

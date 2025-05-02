@@ -93,7 +93,6 @@ with st.form("student_form"):
         mothers_occupation = st.number_input("Mother's occupation:", step=1, value=0)
         fathers_occupation = st.number_input("Father's occupation:", step=1, value=0)
 
-    with col2:
         displaced = st.radio("Displaced", ["Yes", "No"])
         displaced = 1 if displaced == "Yes" else 0
 
@@ -114,6 +113,7 @@ with st.form("student_form"):
 
         age_at_enrollment = st.number_input("Age at enrollment:", min_value=0, max_value=100, step=1, value=0)
 
+    with col2:
         international = st.radio("International", ["Yes", "No"])
         international = 1 if international == "Yes" else 0
 
@@ -143,84 +143,118 @@ def safe_divide(numerator, denominator):
     return (numerator / denominator).fillna(0)
 
 if submitted:
-    data = {
-        'Marital_status': marital_status,
-        'Application_mode': application_mode,
-        'Application_order': application_order,
-        'Course': course,
-        'Daytime_evening_attendance': daytime_evening_attendance,
-        'Previous_qualification': previous_qualification,
-        'Previous_qualification_grade': previous_qualification_grade,
-        'Admission_grade': admission_grade,
-        'Nacionality': nationality,
-        'Mothers_qualification': mothers_qualification,
-        'Fathers_qualification': fathers_qualification,
-        'Mothers_occupation': mothers_occupation,
-        'Fathers_occupation': fathers_occupation,
-        'Displaced': displaced,
-        'Educational_special_needs': educational_special_needs,
-        'Debtor': debtor,
-        'Tuition_fees_up_to_date': tuition_fees_up_to_date,
-        'Gender': gender,
-        'Scholarship_holder': scholarship_holder,
-        'Age_at_enrollment': age_at_enrollment,
-        'International': international,
-        'Curricular_units_1st_sem_credited': curricular_units_1st_sem_credited,
-        'Curricular_units_1st_sem_enrolled': curricular_units_1st_sem_enrolled,
-        'Curricular_units_1st_sem_evaluations': curricular_units_1st_sem_evaluations,
-        'Curricular_units_1st_sem_approved': curricular_units_1st_sem_approved,
-        'Curricular_units_1st_sem_grade': curricular_units_1st_sem_grade,
-        'Curricular_units_1st_sem_without_evaluations': curricular_units_1st_sem_without_evaluations,
-        'Curricular_units_2nd_sem_credited': curricular_units_2nd_sem_credited,
-        'Curricular_units_2nd_sem_enrolled': curricular_units_2nd_sem_enrolled,
-        'Curricular_units_2nd_sem_evaluations': curricular_units_2nd_sem_evaluations,
-        'Curricular_units_2nd_sem_approved': curricular_units_2nd_sem_approved,
-        'Curricular_units_2nd_sem_grade': curricular_units_2nd_sem_grade,
-        'Curricular_units_2nd_sem_without_evaluations': curricular_units_2nd_sem_without_evaluations,
-        'Unemployment_rate': unemployment_rate,
-        'Inflation_rate': inflation_rate,
-        'GDP': gdp
+    numeric_fields = {
+        "Application mode": application_mode,
+        "Application order": application_order,
+        "Course": course,
+        "Previous qualification": previous_qualification,
+        "Previous qualification grade": previous_qualification_grade,
+        "Admission grade": admission_grade,
+        "Nationality": nationality,
+        "Mother's qualification": mothers_qualification,
+        "Father's qualification": fathers_qualification,
+        "Mother's occupation": mothers_occupation,
+        "Father's occupation": fathers_occupation,
+        "Age at enrollment": age_at_enrollment,
+        "Curricular units 1st sem credited": curricular_units_1st_sem_credited,
+        "Curricular units 1st sem enrolled": curricular_units_1st_sem_enrolled,
+        "Curricular units 1st sem evaluations": curricular_units_1st_sem_evaluations,
+        "Curricular units 1st sem approved": curricular_units_1st_sem_approved,
+        "Curricular units 1st sem grade": curricular_units_1st_sem_grade,
+        "Curricular units 1st sem without evaluations": curricular_units_1st_sem_without_evaluations,
+        "Curricular units 2nd sem credited": curricular_units_2nd_sem_credited,
+        "Curricular units 2nd sem enrolled": curricular_units_2nd_sem_enrolled,
+        "Curricular units 2nd sem evaluations": curricular_units_2nd_sem_evaluations,
+        "Curricular units 2nd sem approved": curricular_units_2nd_sem_approved,
+        "Curricular units 2nd sem grade": curricular_units_2nd_sem_grade,
+        "Curricular units 2nd sem without evaluations": curricular_units_2nd_sem_without_evaluations,
+        "Unemployment rate": unemployment_rate,
+        "Inflation rate": inflation_rate
     }
+    
+    negative_fields = [name for name, value in numeric_fields.items() if value < 0]
 
-    df = pd.DataFrame([data])
-    df['pass_rate_1st'] = safe_divide(df['Curricular_units_1st_sem_approved'], df['Curricular_units_1st_sem_enrolled'])
-    df['pass_rate_2nd'] = safe_divide(df['Curricular_units_2nd_sem_approved'], df['Curricular_units_2nd_sem_enrolled'])
-    df['pass_rate_total'] = safe_divide(
-        df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved'],
-        df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
-    )
-    df['missing_eval_1st'] = safe_divide(df['Curricular_units_1st_sem_without_evaluations'], df['Curricular_units_1st_sem_enrolled'])
-    df['missing_eval_2nd'] = safe_divide(df['Curricular_units_2nd_sem_without_evaluations'], df['Curricular_units_2nd_sem_enrolled'])
-    df['missing_eval_total'] = safe_divide(
-        df['Curricular_units_1st_sem_without_evaluations'] + df['Curricular_units_2nd_sem_without_evaluations'],
-        df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
-    )
-    df['avg_grade'] = (df['Curricular_units_1st_sem_grade'] + df['Curricular_units_2nd_sem_grade']) / 2
-    df['grade_gap'] = df['Admission_grade'] - df['avg_grade']
-    df['total_enrolled'] = df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
-    df['total_approved'] = df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved']
-    df['total_evaluations'] = df['Curricular_units_1st_sem_evaluations'] + df['Curricular_units_2nd_sem_evaluations']
-    df['total_failed'] = df['total_enrolled'] - df['total_approved']
-    df['unit_completion_ratio'] = safe_divide(df['total_approved'], df['total_enrolled'])
-    df['financial_risk'] = (1 - df['Tuition_fees_up_to_date']) + df['Debtor'] + df['Scholarship_holder']
-    df['special_case'] = df['Displaced'] + df['Educational_special_needs'] + df['International']
-
-    df.fillna(0, inplace=True)
-    drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
-    df = df.drop(drop_cols, axis=1, errors='ignore')
-    df = df.reindex(columns=scaler_columns, fill_value=0)
-    X_scaled = scaler.transform(df)
-
-    # Prediction
-    proba_rf = rf_model.predict_proba(X_scaled)
-    proba_xgb = xgb_model.predict_proba(X_scaled)
-    proba_dl = dl_model.predict(X_scaled)
-    X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
-    final_proba = meta_model.predict_proba(X_meta)
-    final_pred = np.argmax(final_proba, axis=1)
-    predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
-
-    if predicted_label[0].lower() == "dropout":
-        st.error(f"⚠️ Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+    if negative_fields:
+        st.error(f"⚠️ Nilai tidak boleh negatif untuk kolom: {', '.join(negative_fields)}")
     else:
-        st.success(f"🎉 Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+        data = {
+            'Marital_status': marital_status,
+            'Application_mode': application_mode,
+            'Application_order': application_order,
+            'Course': course,
+            'Daytime_evening_attendance': daytime_evening_attendance,
+            'Previous_qualification': previous_qualification,
+            'Previous_qualification_grade': previous_qualification_grade,
+            'Admission_grade': admission_grade,
+            'Nacionality': nationality,
+            'Mothers_qualification': mothers_qualification,
+            'Fathers_qualification': fathers_qualification,
+            'Mothers_occupation': mothers_occupation,
+            'Fathers_occupation': fathers_occupation,
+            'Displaced': displaced,
+            'Educational_special_needs': educational_special_needs,
+            'Debtor': debtor,
+            'Tuition_fees_up_to_date': tuition_fees_up_to_date,
+            'Gender': gender,
+            'Scholarship_holder': scholarship_holder,
+            'Age_at_enrollment': age_at_enrollment,
+            'International': international,
+            'Curricular_units_1st_sem_credited': curricular_units_1st_sem_credited,
+            'Curricular_units_1st_sem_enrolled': curricular_units_1st_sem_enrolled,
+            'Curricular_units_1st_sem_evaluations': curricular_units_1st_sem_evaluations,
+            'Curricular_units_1st_sem_approved': curricular_units_1st_sem_approved,
+            'Curricular_units_1st_sem_grade': curricular_units_1st_sem_grade,
+            'Curricular_units_1st_sem_without_evaluations': curricular_units_1st_sem_without_evaluations,
+            'Curricular_units_2nd_sem_credited': curricular_units_2nd_sem_credited,
+            'Curricular_units_2nd_sem_enrolled': curricular_units_2nd_sem_enrolled,
+            'Curricular_units_2nd_sem_evaluations': curricular_units_2nd_sem_evaluations,
+            'Curricular_units_2nd_sem_approved': curricular_units_2nd_sem_approved,
+            'Curricular_units_2nd_sem_grade': curricular_units_2nd_sem_grade,
+            'Curricular_units_2nd_sem_without_evaluations': curricular_units_2nd_sem_without_evaluations,
+            'Unemployment_rate': unemployment_rate,
+            'Inflation_rate': inflation_rate,
+            'GDP': gdp
+        }
+        
+        df = pd.DataFrame([data])
+        df['pass_rate_1st'] = safe_divide(df['Curricular_units_1st_sem_approved'], df['Curricular_units_1st_sem_enrolled'])
+        df['pass_rate_2nd'] = safe_divide(df['Curricular_units_2nd_sem_approved'], df['Curricular_units_2nd_sem_enrolled'])
+        df['pass_rate_total'] = safe_divide(
+            df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved'],
+            df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
+        )
+        df['missing_eval_1st'] = safe_divide(df['Curricular_units_1st_sem_without_evaluations'], df['Curricular_units_1st_sem_enrolled'])
+        df['missing_eval_2nd'] = safe_divide(df['Curricular_units_2nd_sem_without_evaluations'], df['Curricular_units_2nd_sem_enrolled'])
+        df['missing_eval_total'] = safe_divide(
+            df['Curricular_units_1st_sem_without_evaluations'] + df['Curricular_units_2nd_sem_without_evaluations'],
+            df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
+        )
+        df['avg_grade'] = (df['Curricular_units_1st_sem_grade'] + df['Curricular_units_2nd_sem_grade']) / 2
+        df['grade_gap'] = df['Admission_grade'] - df['avg_grade']
+        df['total_enrolled'] = df['Curricular_units_1st_sem_enrolled'] + df['Curricular_units_2nd_sem_enrolled']
+        df['total_approved'] = df['Curricular_units_1st_sem_approved'] + df['Curricular_units_2nd_sem_approved']
+        df['total_evaluations'] = df['Curricular_units_1st_sem_evaluations'] + df['Curricular_units_2nd_sem_evaluations']
+        df['total_failed'] = df['total_enrolled'] - df['total_approved']
+        df['unit_completion_ratio'] = safe_divide(df['total_approved'], df['total_enrolled'])
+        df['financial_risk'] = (1 - df['Tuition_fees_up_to_date']) + df['Debtor'] + df['Scholarship_holder']
+        df['special_case'] = df['Displaced'] + df['Educational_special_needs'] + df['International']
+    
+        df.fillna(0, inplace=True)
+        drop_cols = ['missing_eval_1st', 'missing_eval_2nd', 'pass_rate_1st', 'pass_rate_2nd']
+        df = df.drop(drop_cols, axis=1, errors='ignore')
+        df = df.reindex(columns=scaler_columns, fill_value=0)
+        X_scaled = scaler.transform(df)
+    
+        # Prediction
+        proba_rf = rf_model.predict_proba(X_scaled)
+        proba_xgb = xgb_model.predict_proba(X_scaled)
+        proba_dl = dl_model.predict(X_scaled)
+        X_meta = np.hstack([proba_rf, proba_xgb, proba_dl])
+        final_proba = meta_model.predict_proba(X_meta)
+        final_pred = np.argmax(final_proba, axis=1)
+        predicted_label = label_encoders['Status'].inverse_transform(final_pred.astype(int))
+    
+        if predicted_label[0].lower() == "dropout":
+            st.error(f"⚠️ Prediksi Status Mahasiswa: **{predicted_label[0]}**")
+        else:
+            st.success(f"🎉 Prediksi Status Mahasiswa: **{predicted_label[0]}**")

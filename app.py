@@ -217,7 +217,6 @@ if submitted:
 
     # Pastikan kolom df sesuai dengan scaler_columns
     df = df.reindex(columns=scaler_columns, fill_value=0)
-    st.write(f"Kolom df yang diproses: {df.columns}")
 
     # Melakukan transformasi dengan scaler yang sudah dilatih
     X_scaled = scaler.transform(df)

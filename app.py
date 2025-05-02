@@ -71,6 +71,7 @@ with st.form("student_form"):
     col1, col2,col3 = st.columns(3)
 
     with col1:
+        st.markdown("Data Mahasiswa")
         marital_status = st.selectbox("Marital Status", ["Single", "Married", "Widower", "Divorced", "Facto Union", "Legally Separated"])
         marital_status = {
             "Single": 1, "Married": 2, "Widower": 3,
@@ -99,6 +100,7 @@ with st.form("student_form"):
         fathers_occupation = st.number_input("Father's occupation:", step=1, value=0)
 
     with col2:
+        st.markdown("Data Finansial")
         international = st.radio("International", ["Yes", "No"])
         international = 1 if international == "Yes" else 0
 
@@ -116,8 +118,13 @@ with st.form("student_form"):
 
         scholarship_holder = st.radio("Scholarship holder", ["Yes", "No"])
         scholarship_holder = 1 if scholarship_holder == "Yes" else 0
+
+        unemployment_rate = st.number_input("Unemployment rate:", min_value=0.0, step=0.1, value=0.0)
+        inflation_rate = st.number_input("Inflation rate:", min_value=0.0, step=0.1, value=0.0)
+        gdp = st.number_input("GDP:", min_value=-9.0, step=0.1, value=0.0)
     
     with col3:
+        st.markdown("Data Akademik")
         curricular_units_1st_sem_credited = st.number_input("Curricular units 1st sem (credited):", step=1, value=0)
         curricular_units_1st_sem_enrolled = st.number_input("Curricular units 1st sem (enrolled):", step=1, value=0)
         curricular_units_1st_sem_evaluations = st.number_input("Curricular units 1st sem (evaluations):", step=1, value=0)
@@ -131,10 +138,6 @@ with st.form("student_form"):
         curricular_units_2nd_sem_approved = st.number_input("Curricular units 2nd sem (approved):", step=1, value=0)
         curricular_units_2nd_sem_grade = st.number_input("Curricular units 2nd sem (grade):", min_value=0.0, max_value=200.0, step=0.1, value=0.0)
         curricular_units_2nd_sem_without_evaluations = st.number_input("Curricular units 2nd sem (without evaluations):", step=1, value=0)
-
-        unemployment_rate = st.number_input("Unemployment rate:", min_value=0.0, step=0.1, value=0.0)
-        inflation_rate = st.number_input("Inflation rate:", min_value=0.0, step=0.1, value=0.0)
-        gdp = st.number_input("GDP:", min_value=-9.0, step=0.1, value=0.0)
 
     submitted = st.form_submit_button("Prediksi Status Mahasiswa")
 
